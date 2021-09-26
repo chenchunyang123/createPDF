@@ -24,8 +24,8 @@
     // 生成pdf的方法
     function createPdf() {
       const size = document.querySelector("#pdfSize");
-      const designSize = parseFloat(size.value) * 1024 * 1024; // 设计大小字节
-      if (designSize === 0) {
+      const designSize = parseFloat(size.value || 0) * 1024 * 1024; // 设计大小字节
+      if (isNaN(designSize) || designSize === 0) {
         alert("请输入正整数！");
         return;
       }
@@ -34,7 +34,7 @@
       const repeatTimes = designSize - defaultSize - errorSize;
       const doc = new jsPDF();
       doc.text("1".repeat(repeatTimes), 10, 10); // 1个数字为1字节
-      doc.save(`约为${size.value}m大小的pdf.pdf`);
+      doc.save(`约为${parseFloat(size.value)}m大小的pdf.pdf`);
     }
   </script>
 </html>
