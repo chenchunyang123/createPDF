@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>生成指定大小pdf(有一定误差)</title>
+  </head>
+  <body>
+    <div>
+      <h2>PDF</h2>
+      <input
+      style="width: 190px;"
+        type="number"
+        id="pdfSize"
+        oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+        placeholder="请输入正整数（单位：M）"
+      />
+      <button onclick="createPdf()">生成pdf</button>
+    </div>
+  </body>
+  <script src="./jspdf.min.js"></script>
+  <script>
+    // 生成pdf的方法
+    function createPdf() {
+      const size = document.querySelector("#pdfSize");
+      const designSize = parseFloat(size.value) * 1024 * 1024; // 设计大小字节
+      if (designSize === 0) {
+        alert("请输入正整数！");
+        return;
+      }
+      const defaultSize = 2460; // 默认占用2460字节, 1m等于1024k, 1k等于1024字节
+      const errorSize = (parseFloat(size.value) / 2) * 100 * 1024; // 误差
+      const repeatTimes = designSize - defaultSize - errorSize;
+      const doc = new jsPDF();
+      doc.text("1".repeat(repeatTimes), 10, 10); // 1个数字为1字节
+      doc.save(`约为${size.value}m大小的pdf.pdf`);
+    }
+  </script>
+</html>
